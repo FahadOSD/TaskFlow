@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{% if task.id %}Update Task{% else %}Create Task{% endif %} - TaskFlow{% endblock %}
+{% block content %}
+<div class="card">
+  <a href="{% url 'tasks' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Tasks
+  </a>
+  <div class="card-header">
+    <h1>
+      {% if task.id %}
+        <i class="fas fa-edit"></i> Update Task
+      {% else %}
+        <i class="fas fa-plus"></i> Create Task
+      {% endif %}
+    </h1>
+  </div>
+  <form method="post" class="form-container">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_title">
+        <i class="fas fa-heading"></i> Task Title
+      </label>
+      <input type="text" name="title" id="id_title" class="form-control" value="{% if task.title %}{{ task.title }}{% endif %}" required>
+    </div>
+    <div class="form-group">
+      <label for="id_description">
+        <i class="fas fa-align-left"></i> Description (Optional)
+      </label>
+      <textarea name="description" id="id_description" class="form-control" rows="4" placeholder="Add some details about your task...">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+    </div>
+    <div class="form-group checkbox-group">
+      <input type="checkbox" name="complete" id="id_complete" {% if task.complete %}checked{% endif %}>
+      <label for="id_complete">
+        <i class="fas fa-check"></i> Mark as complete
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">
+      {% if task.id %}
+        <i class="fas fa-save"></i> Update Task
+      {% else %}
+        <i class="fas fa-plus"></i> Create Task
+      {% endif %}
+    </button>
+  </form>
+</div>
+{% endblock %}

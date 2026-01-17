@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ task.title }} - TaskFlow{% endblock %}
+{% block content %}
+<div class="card">
+  <a href="{% url 'tasks' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Tasks
+  </a>
+  <div class="task-card">
+    <h1 class="task-title">
+      {% if task.complete %}
+        <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
+      {% else %}
+        <i class="far fa-circle" style="color: var(--gray-400);"></i>
+      {% endif %}
+      {{ task.title }}
+    </h1>
+    <div class="task-meta">
+      <div class="meta-item">
+        <i class="fas fa-calendar-plus"></i>
+        <span>Created: {{ task.created|date:"F j, Y, g:i a" }}</span>
+      </div>
+      <div class="meta-item">
+        <i class="fas fa-info-circle"></i>
+        <span>Status: 
+          {% if task.complete %}
+            <span class="status-badge status-complete">Completed</span>
+          {% else %}
+            <span class="status-badge status-pending">Pending</span>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+    <h3><i class="fas fa-align-left"></i> Description</h3>
+    <div class="task-description">
+      {% if task.description %}
+        {{ task.description|linebreaks }}
+      {% else %}
+        <p class="empty-description">No description provided</p>
+      {% endif %}
+    </div>
+    <div class="action-buttons">
+      <a href="{% url 'task-update' task.id %}" class="btn btn-primary">
+        <i class="fas fa-edit"></i> Edit Task
+      </a>
+      <a href="{% url 'task-delete' task.id %}" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Delete Task
+      </a>
+      {% if not task.complete %}
+        <form method="POST" action="{% url 'task-update' task.id %}" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="title" value="{{ task.title }}">
+          <input type="hidden" name="description" value="{{ task.description }}">
+          <input type="hidden" name="complete" value="True">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check"></i> Mark Complete
+          </button>
+        </form>
+      {% else %}
+        <form method="POST" action="{% url 'task-update' task.id %}" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="title" value="{{ task.title }}">
+          <input type="hidden" name="description" value="{{ task.description }}">
+          <input type="hidden" name="complete" value="False">
+          <button type="submit" class="btn btn-secondary">
+            <i class="fas fa-redo"></i> Mark Pending
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

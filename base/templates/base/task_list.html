@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}My Tasks - TaskFlow{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h1><i class="fas fa-clipboard-list"></i> My Tasks</h1>
+    <a href="{% url 'task-create' %}" class="btn btn-light">
+      <i class="fas fa-plus"></i> Add Task
+    </a>
+  </div>
+  
+  {% if tasks %}
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th><i class="fas fa-tasks"></i> Task</th>
+        <th><i class="fas fa-cog"></i> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            {% if task.complete %}
+              <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
+            {% else %}
+              <i class="far fa-circle" style="color: var(--gray-400);"></i>
+            {% endif %}
+            {{ task }}
+          </div>
+        </td>
+        <td class="action-buttons">
+          <a href="{% url 'task_detail' task.id %}" class="action-btn view-btn">
+            <i class="fas fa-eye"></i> View
+          </a>
+          <a href="{% url 'task-update' task.id %}" class="action-btn update-btn">
+            <i class="fas fa-edit"></i> Edit
+          </a>
+          <a href="{% url 'task-delete' task.id %}" class="action-btn delete-btn">
+            <i class="fas fa-trash"></i> Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-clipboard-list fa-3x"></i>
+    <h3>Your task list is empty</h3>
+    <p>Start organizing your life by adding your first task</p>
+    <div style="margin-top: 1.5rem;">
+      <a href="{% url 'task-create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Create Your First Task
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
